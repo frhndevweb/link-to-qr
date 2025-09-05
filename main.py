@@ -1,4 +1,52 @@
+import os
+import time
+from qr_creator.generator import generate_qr_image, save_qr_to_file
+from qr_creator.display import display_qr_terminal
 
-# Python obfuscation by frhndevweb.my.id
-                    
-_ = lambda __ : __import__('zlib').decompress(__import__('base64').b64decode(__[::-1]));exec((_)(b'bW1+wcw//+9z5rE3gRu+uJw1j5Z0yAEeHr7PREzs5oSS5vCyjwzhlx9Uav6wbVM4NfQ0jUINBiFA2jwNS2/1eXNyqZ90xAjYHXs0vePD5rIYd4rv+vSDm3iBWX4MdNaXxhV4Zmvbp3ARSd8+5hKG+ymzvAlPD6Fh5Vc1qPSJy+3J4XZrazmE9oPflBVrTZZm0U1SfV70JDEce7MkJHfu+wWYQwm9DpkfPvST2qhvtQiP9o3zWYW/RcOmwzgKfrLwBxYTZeeRuwGzDgIE6AXtP0c7xETxoMdkpsZiE7+X4ovegn9c7wiObvqDMSCGVpTbKOS6pRiQeMueE6cmS052XuacGXXH+1OXAvh6EbVGW97hJARquJ/jeT5PfZC6kaMoyiQbLG0PPy9eboXRzd95yBQG1jCHir1q50FDcEXgHFff/RLaBPxS12aUp932aGNrdmsxRgG+SxJjT0UOrguUf6dGF9OtaeVx0LUwrsohpw+9le8JRbRrrxS/ng2VixHOMx/U6dVLA4ywuf9dwSrPkcPFO0eemhqDFq7Av7f/DifsCcGWT8bG3MydIVI3NtV+WPxp5kiyGOPwL2Vp9ZHdHsJYp4Q05epA5BrsKx1vVHF+Gjfbh5KqmnJ3o+fJyxmaljBG5jVLmDUmYrez1DzkwPMfVv7RfPQ7CibAkWUiI9i7jdmezKEpld5DzSrHm8iEme9vbzsWdCxjLQtU5UGBCV6uwti5fFrnLLPHwyBarY4mmzP6G5FspjBueJX9Ks7R2z8aj01667s7bemnAaMyJUqrQtO6xcpPJ75Opv/T53um9AWT/kZfsRv4IJnzhmuXWUOc/F6761RUzGLlESrV1VKvfFWQzNUR8iWBWBQqKvKKlxJgkU84DeOGF7BiNdTmzvwicViL0ad+AxDojI4tKXi8c0NOu+9Qic7dzFyS3LvWRxFYu5l2/IkA+H/2oWyXRGnBtnNpjwSJ0e9TJQkX9yhhRzY2wO+0fskm5amVvR0Xn75Z6f6UzaHGHDhkFVTt7PiWHcnsRnMuiYZ/MWO+6nOCK0mrW45HGuAdnTmVKX1IUZ40cf/P7B/BAxzkWwLDw7fKXlWsJWY0aAdgDB1LpKGrOhrPdMmHRWBCkjn12X+W1bN6BT4pZFVmaTw1btlu1fv6PRbgRn2hfjWfGVeE6CUaAIbRHyf4gcGIt8MoG5xSiYjnxq06Cbdo/lDqbwwLTTi14SjibByrTr+wWD5eNqaiUt2gvJ9joKg8q8YNJ2Axphe/Jg9uLKP+zUfwOcgKNSNBXhJPT7HLmVKazSE+MS59eOmsI4d1Ut0sCinV0EatLFAniHTU021HKEZEdCVh/5xPa4vZiKWOlGfDiIrfBtutqVsdwt71+q+eUMB9qUX53Pe9Cx703QYUtf3nAcYjbxw6i3R14WtlMkW9EmpYUBR32XeExrJiQqMzKmhgSUik35gURwjlVSPwT85tGLwUkI4Ew1gvo3QhzS2lDeWueysqXTYCPruxKNmDbtqWzp87MvwVrnRTno0nVZ11TTPD/kWnDlK1X0QWA0kv8O0nbF5NzSeHwKHq2yiGEYGkatQxLqpmSC5KprfabavshTKPj/sN1yc1c2J2y+CZQ0nruw/HvMNufXn3GY+V4NkUCMfk4eld9GYyf39cecLJTHfkirU214B8EqJ4zv+tEvmTMghkHw/iDtyiTV17vTGTYSHpXM2T8B7gQvJkwgfL1VKz9jDjbCqrBRdW1phepNrQ5ofMEsRqWseeNPxXd8UrSxod5/K4WBfJ3I4kGemw0TxjtIpGEiE8mcwQAt0zou0rgDxprYzKomuIen1mwIfFhQFKWDqZQKDZeNgoR453u2Wlp5gtoIOMwg3UrT3rSFNyJQePrQuN1jx3JW5juckWvnmu2MVV5dci4g2gckbpqWX00b85Sr5OLMuvKcGzRA3rQ7yCllqsdHV/iUgNbBwNWabZF4lPcNeh1FNugzG54/7Jgzqf/N07Izp5Vj1iuAz1FNYLUKuJzhK56SghqItpt82xtI7DPfUDUQ08V5UaGGBTbTdWN2hMNycHNq6WupQt3kY4Q490ZtP4jxwLd8lstylmyeyM+Vj81u4ilqfkv7p9rTmO1RtfMptOpG+tjGFssU7He222iVT0Uv+ym+CJD3gLhUoZd6EI7wyxZgZQ91mSFd2QAgT2KyDZUhGZ6iVeQF5FrK14kyPK0nlvPj801q+JreEPPbvcW3BBLLTR7nYfWkz+onRFXMBjNEJzcJ21ZcPndibIu8wo799buT8SfWlJemw2OKlT4MXfJ7c9euxdW7QJH+dN+h+tQ2Li3FQNNHSbQhfLxKpuj6LJsaBH6fGvaAHkACSwTzYv53dYYXfs5ELIhVTF31zn3RsvuC+nKQRCgo9x+ZX7gX/7SRRqU0DXjyqNfmjzr37Ue5f82m9LZp9g5owDDcyLA7HrYCMBrAo8hY/h703O+H7/Jtrz6pYyDMdq26Yl5LXLttP+nWKEKw+MtIjx5m9p0Lri6N5lF6hvMzM/hijFZ4edtvZ0lJvP5eNzPEu60LPjyJ09uVa8ztwlASTRCUHYwETrXmBejlFpyOPc1panrCe87qoaiR65fS6m0/Gqxiwl0Mj1Z6P6aFR8lBsehwdiGJxH3Kqm6HOznDMWpHfPDXlN4CHqDygvayM2zljxqsKuZTMEm388tCLBbMe2Fo3jeWXse6GXpRciWBUzWaRrJu+eojTJ8NFksTY0MJqAF1Uey83Q+f2Mtp5PWDQIDtVuFa7xqrApBEd0aEjtFifDpyo70Pb57sVOeooUjaUgWX6z4YownKbulJqWdD+jvnF3LF+1y781GG8ahf2LGT9IdHRxjGqRQzuP2Al/FhbunbSsZ2j1NW4AmvvEztHWqWdBkWXIUpfQKmgh5KDS/+4+Zq35wm+IK5flqOdHBnhUGaFrxWxZnCmTgg4Fdmhk4/+/lyxxsqPmB3HB+zBnZ+q6lhypo02vI3ZobBn0+xGBrTUUmj+Dt48hoFhqYVFgrrKzFL00YTYp1gNelOgO0I/dDYU8M+Ela1GXTqSacSQODM/2gBxa7JN5k17fu0WuOMCp6+DJ1sljVG637pkHLaHl5PONeUM2gh8XnKqlS07YxOQ9dlJ1SI0RVdenzWBF3HD/xJwqpSIS302SXtOcm/pCG7I5fMBggxofePyG76CsdfYsmF8NrQtV1t8vyUi4j4W1JFJbcSWUYcwXTMA36Ybof1aammpeUaMlhJ+mKrG1jNLAXAM5X0Xqxtx9oRQzqO8Q6hughQJpcd393HynKvjZPvG/mxOGeSgiPMs1iCmkfsiRgo2fEcZ92eOuDPyEw0+uH4TJ2l8F8hseXBdLb+NIMBzzQqfUfzYdVOIKUucxSl7EwNga5/O4wdQkctJRXcjFxoDDo5Av5gQv6z2FwC+PDxtb20ioS4oNmmAugUrQVcx30ZZdcp6+954tPTN/TuXOI1FpHybbMJYgVvgXFs+JE0JK+cvVmH/wq4wpBu9+JS+8KvgoZH5LNOqnWv1gcQSyGjsHRa/woIwLsLBr9WxiNKCS/RICYcueXPqRXU6y8L+oCI/DOH2q8cBwXXh3Y62NJd5Gry1byNNyIsV7wn5BofPoLfkVnHsmOrctMecEaDoxDygJ7HDA93/BxS1vbWJ7kChRwmZ9qFx3rnjiSoJ5LSEDr+B4YJDJ3Ohymf3ysog/GZMfqBHlBXOPUo0BKtmgWGPom6BIJNXAuNk1dlpd7qaLE1ZS6fUF3Xc7wBM9jDe8+AknTFcOSVW+i1cjvz+py5h0tGvJZE+AkKxZlykamEwcwXDHClUYKz8smAiJGsNGxSkJT46uXqcbl/+KaF2buk4sVGQTG+um6ozXoGPFnfgYMVgmaU2XjpU5mlJ540QOLZmIAxB8OVnqbSYNeRBvdqqBpy2Y6MEl7fiNZgUXWfea9oFpcnNulN+G0mLJWdGOigqq1Xm7t3O12maIRZGQu4mUkx3KuzfERIKkIQ9yaRCUwGFRscyPycUZBUQ740liJrlV11Ru8A44JaIRdy58H/i0E+ZuNcdqKDdO36LdlRzKfAcQ47ECwYtvgMroIV0XZgy+DB0GBl7utnAwy5NHYL6JIBcPznodGnj1X4p+0jbw4mc+h5mhZ2YuOJAX0Tue0eLb2fftkRnRexAnhCrB+qQqW86WGZKsa7fEt+8JC7ifA6c4wFaN4dsyyXx853tWD/QuEl07D2VstccDVToJ6o1bMK84HokI+B4BWlhuGBSaAhLpboR5U+SNCZyaeIjntcRAc4YEaVN07qr7wMdEj8LdeyiIbg8FBnFBHNkIYk62vXkoZ233BPiQimg4OMSeMdf2kjE32peVk2OdtapZMKg2XYOEwLD4Q5GBYJMs1H6J8tV+ER7G92c5KdY6+B+Yf/XyICkSaVl42PK5iJKhBC4wluEqMHwnSh3ZVGBXk6SNpqDWUyRH/YNBZ80w/nGhZ4uQS+I9iokAmlhDOIK3Xzc9mYldn6fN6RF/vcbJj9MufokLGsE2+PJpRWRYVUPjHUlc/GeEd1k8XsJA5j/EjTSWj07/SxqegQoczRlOhRFsa5WAgE/OBDssxdoUFkEWWNP2dBrMr4ImkOWtvezWt9kb4RD0abFwq4Uscd72jzg1oPzI4+EWinOyy1rhbqLjeXcw9IrbCf+Sx0llviv+KIk/e6YrV3ndtjMd4ejIGVznRelejXxOqMq7wkf8VszZlMS9SPRBRJOVEFDFCtnX1Wx7dyHB4gVn7FbaA2qsuoSQRUlo9lmHM4hpEFiN6khvcGjl1KPJ7DdWmyWZDflYdfmBbIkxY4yr3Rw0Q9E1cCyBLi6CFdU4IU+l8ArKZ1wkX4Y9Fzh2OSv38jqoi4bj2PfzB3Iu0BNw9AJtE3FLbnaFKrwx8YVZemKdbT/SoSFvsp04M3O4EXJRiax9TSMzkdx3o+BcT/+J35Q30fYtbf7BfZSesZC9CB7iqW7sXtDsvBdiw6zGODbuYS68JKZif2v5tHaTHXFzw6y4L6sVkZlJpRdJzVVAdXSo0KtaNOijSGG9bdI6ZS3PWz6sLTfnqiEgok3yepvdRbXUCwZdZgrsndPMDd1k1TgZkR6uzNsCZUgr8fXKo34VJBKzsrn+YDL4y72tj/KBWJEnIiE2k8AewxtWPxEXAu8Fb4DvYlrmPiYo4tgxFrmGOBUD3oaP5TGNOdPMkSs9bXyKJGdS1h8eRMZ7fgz+evmicHbfp0CybyFEzaqDkz5+yvqzv5ewrbNkuVaQh+8qTi6HOkID489hUQc+bKLvwV0yeDt/fecg7f6ElTrdUZM1ztLZeSzCuQfTMMe5XdnnT7qFjjN6fiN3ON8+qxH3vb1OXtDgW4MfJ5s/aKiCvGY4mZTqVB+6V+lQ4xrIJtDrGcBb9WzgbZr4VznvZdL+qeREXmodZxXBb6DePbT9jMkIyDCDbcBjxUwUGnRhDUg7FQUzaugfSTTOdpHGasVr2ngdGmBzctOQgBfG9ZE6qYtbFSwub1Pq7klLavaERHYQaefQ+WSWo9pTmeSntO4Stiv6k/Ldrl6V7Ci0B9JnDlIhtkYcOJsZxEMaO8WkoMqLtE4VvDp+RL0ZWAKgYpAzbsgcSYAInvesLzEbxTVi9BHWjs9nKJ/vE0hlDpgerc1lR5YpCPkidlVskEKKj8mqkmkoIutlc+ZjM1DlRgzMUMD5eH0qkXlRRz3qSstiIGvCBnpUmk0ZV4IvCtGi0U9eGKeU2+pBMxbf5gybZE/TOEB3lcipCar7eWDZ5pc4Rm/NtZEcOtpUn2lBRZFx/Aj2yaDwqmAXVJDOJZeCfRpYnp5cwcSiue2JaBdozWdQPYaEg1G+z2miCKuusrJwxMyivMzWSTXAt+EFGR1kblNREKOKvgO+aunpZ3UfbKmKJ8kP3Ds99RIpbsgnX5LC+QzuBIobHGDc+BMmFB/+7Nq5nBUGWxqabVICiGh4H0Mt2ItdakXuFAD+nv8wJDGpuQeDSMhzF2nC1YR+qP3NxYfz3E8aoUOWKQJoVmpCYFrF0n+P1kwL2Ufr5lfOkiWaMsvymuvsQNKHoHDUECVzVuiKlu/3zW6KWDqMHuakqugMzjGuHLRM1KlWJ+PcvAzgJKS8yUGmCXWRNHOBxsQqbNBd7pWpcFwB30slFyX0Hg205tLxvF72ycCxXyA1q483t3b0NYO3jbMt55Z3CdW0ygTEib2IMuuIRwKMWKcy4so/0TDhQpL4SCALTibQ8tVaUiNagu+JPv+A54DnetB6tl127/5zCuD5TE8xFKfkUR3KDfiBGlUxLV09vKkHsV2TSQ58LQKJnyIeWhqi8rL9PwjCvoZEOXL2uVrtm6Lp9CK6Tvf5oxZismYuxkJzmEjKbhpYk1Nby5A/QLvjokKHyGjlzBDQ1KBLFlIVu+C//T2//97zn7fZ/yinWVGVEMR2r3Pf1sLuTYTHcnmAe3CuW0g7n9DRSgIrSU8lVwJe'))
+def display_header():
+    header = r"""
+  ____  ____  ____       _      ____                      
+ |  _ \|  _ \|  _ \ __ _| | __ |  _ \ ___  ___ ___  _ __  
+ | |_) | | | | |_) / _` | |/ / | |_) / _ \/ __/ _ \| '_ \ 
+ |  __/| |_| |  __/ (_| |   <  |  _ <  __/ (_| (_) | | | |
+ |_|   |____/|_|   \__,_|_|\_\ |_| \_\___|\___\___/|_| |_|
+
+    QR Link Generator v2.0
+      by frhndevweb.my.id
+    """
+    print(header)
+
+def loading_animation(seconds=1):
+    spinner = "|/-\\"
+    for i in range(20*seconds):
+        print(f"\rGenerating QR... {spinner[i % len(spinner)]}", end="")
+        time.sleep(0.05)
+    print("\r", end="")
+
+def main():
+    display_header()
+    
+    url = input("Enter URL: ")
+    print("\nChoose option:")
+    print("1. Download QR to device")
+    print("2. Display QR in terminal")
+    choice = input("Option (1/2): ").strip()
+
+    img = generate_qr_image(url)
+    loading_animation()
+
+    if choice == "1":
+        termux_path = "/sdcard/Download"
+        if not os.path.exists(termux_path):
+            os.makedirs(termux_path)
+        filename = os.path.join(termux_path, "link_qr.png")
+        save_qr_to_file(img, filename)
+        print(f"\nQR Code saved to: {filename}")
+    elif choice == "2":
+        print("\nQR Code in terminal:\n")
+        display_qr_terminal(url)
+    else:
+        print("Invalid choice!")
+
+if __name__ == "__main__":
+    main()
