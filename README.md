@@ -110,4 +110,4 @@ This project is **free to use**.
 ## 🔹 Contact
 
 **Author:** frhndevweb.my.id
-**GitHub:** [https://frhndevweb.github.io](https://frhndevweb.github.io)
+**GitHub:** [https://github.com/frhndevweb](https://github.com/frhndevweb)
