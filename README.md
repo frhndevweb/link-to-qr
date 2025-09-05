@@ -54,7 +54,7 @@ pip install "qrcode[pil]"
 4. **Clone or download the project**
 
 ```bash
-git clone <your-repo-link>
+git clone https://github.com/frhndevweb/link-to-qr.git
 cd qr-link-generator
 ```
 
